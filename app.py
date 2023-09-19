@@ -13,8 +13,6 @@ st.write('This app pulls live NFL game data and uses a machine learning model to
          the next play will be a run or a pass.')
 st.code('Is it accurate?', language=None)
 st.write('Sort of but not really. 70\% of the time, it works every time.')
-st.code('Wouldn\'t a good model actually predict the outcome of the play?', language=None)
-st.write('No. What does this look like, an AI model? Don\'t answer that.')
 
 st.write('')
 st.markdown('<h4>The ~Model~</h4>', unsafe_allow_html=True)
