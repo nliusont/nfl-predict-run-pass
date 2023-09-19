@@ -115,6 +115,7 @@ if len(st.session_state['game_series'])>0:
             emoji = '&#129304'
         else:
             emoji = '&#129335;'
+        st.markdown('<p></p>', unsafe_allow_html=True)
         st.markdown(f'<h5>What actually happened: {outcome} {emoji}<h5>', unsafe_allow_html=True)
 
 st.markdown('<p></p>', unsafe_allow_html=True)
