@@ -81,12 +81,11 @@ if len(st.session_state['game_series'])>0:
 st.markdown('<p></p>', unsafe_allow_html=True)
 st.markdown('<p></p>', unsafe_allow_html=True)
 st.markdown('<p></p>', unsafe_allow_html=True)
-st.markdown("<h4 style='text-align: left;'>Methodology</h4>", unsafe_allow_html=True)
+st.markdown("<h4 style='text-align: left;'>Background</h4>", unsafe_allow_html=True)
 source = 'https://github.com/cooperdff/nfl_data_py'
-st.write('The underlying model is a random forest classifier with out of sample accuracy of 70%. It was trained on data \
+st.write('The underlying model is a random forest classifier with an out of sample accuracy of 70 percent. It was trained on data \
          from the 2022 NFL season via the [nfl_data_py](%s) python library' % source)
 
-st.markdown("<h4 style='text-align: left;'>Background & sources</h4>", unsafe_allow_html=True)
 li = 'https://www.nls.website/'
 st.write('This streamlit app and underlying model were developed \
         by [Nick Liu-Sontag](%s), a data scientist :nerd_face: in Brooklyn, NY' % li)
