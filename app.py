@@ -27,7 +27,8 @@ selected_game_index = games.index(selected_game)
 selected_gameid = game_ids[selected_game_index]
 selected_tms = home_away_tms[selected_game_index]
 
-game_series = []
+if 'game_series' not in st.session_state:
+    st.session_state['game_series'] = []
 
 update_button = st.button('Update game data')
 if update_button:
