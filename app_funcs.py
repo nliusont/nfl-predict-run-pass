@@ -41,7 +41,7 @@ def get_game_data(week, gameid, teams):
         goal_to_go = 0.
 
     if down == -1:
-        st.write('Invalid play, try again!')
+        st.write('Invalid play, try the next one!')
         return pd.Series(), '', ''
     
     else: 
