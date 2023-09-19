@@ -78,4 +78,12 @@ if len(st.session_state['game_series'])>0:
         pred = st.session_state['pred']
         st.markdown(f"<h1 style='text-align: center;'>{pred[0].upper()}</h1>", unsafe_allow_html=True)
 
+st.markdown('<p></p>', unsafe_allow_html=True)
+st.markdown('<p></p>', unsafe_allow_html=True)
+st.markdown('<p></p>', unsafe_allow_html=True)
+st.markdown("<h4 style='text-align: left;'>Background & sources</h4>", unsafe_allow_html=True)
+li = 'https://www.nls.website/'
+st.write('This streamlit app and underlying model were developed \
+        by [Nick Liu-Sontag](%s), a data scientist :nerd_face: in Brooklyn, NY' % li)
+
 
