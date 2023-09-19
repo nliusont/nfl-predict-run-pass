@@ -6,6 +6,7 @@ from app_funcs import get_game_data
 from app_funcs import predict_play
 from app_funcs import get_games
 from app_funcs import generate_play_text
+from app_funcs import get_ordinal
 from datetime import date
 import nfl_data_py as nfl
 st.set_page_config(page_title="Predicting the next NFL play")
@@ -48,11 +49,21 @@ if len(games) > 0:
     # select the game and, if not live, the play #
     if selected_game:
         if source != 'Live':
-            game_data = game_data[game_data['game_id']==selected_gameid].copy()
-            num_of_plays = len(game_data)
-            st.session_state['num_plays'] = num_of_plays
-            selected_play = st.number_input(label='Select play', min_value=1, max_value=num_of_plays)
-            play_index = selected_play+1 # 0 is game start and 1 is kickoff, so add 1
+            play_df = game_data[game_data['game_id']==selected_gameid].copy()
+            play_df = play_df[['qtr', 'posteam', 'down', 'ydstogo', 'play_id']].dropna()
+            # create list of plays
+            play_df['play_text'] = play_df["qtr"].astype(int).astype(str)  \
+                                    + 'Q ' \
+                                    + play_df["posteam"] \
+                                    + ' - ' \
+                                    + play_df["down"].apply(lambda x: get_ordinal(x)).astype(str) \
+                                    + ' & ' \
+                                    + play_df["ydstogo"].astype(int).astype(str) \
+                                    
+            play_index = st.selectbox(label='Select play', 
+                                         options=play_df['play_id'], 
+                                         format_func=lambda x: play_df.loc[play_df['play_id']==x, 'play_text'].values[0])
+
         else:
             # if the game is live, always go to the latest play
             play_index = -1 

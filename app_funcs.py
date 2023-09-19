@@ -45,6 +45,7 @@ def get_games(source):
                            cache=False, 
                            alt_path=None, 
                            columns=[
+                                    'play_id',
                                     'qtr',
                                     'home_team', 
                                     'away_team', 
@@ -65,6 +66,9 @@ def get_games(source):
         
         # filter to selected week
         data = data[data['week']==week].copy()
+
+        # sort plays into correct order
+        data = data.sort_values(by=['game_seconds_remaining'], ascending=False)
 
         # get unique list of games
         game_df = data[['home_team', 'away_team', 'game_id']].drop_duplicates()
@@ -185,6 +189,7 @@ def get_game_data(source, week, gameid, teams, game_data):
     else:
         from app_funcs import get_ordinal
         game_data = game_data[[
+                            'play_id',
                             'qtr',
                             'week',
                             'yardline_100',
@@ -200,8 +205,8 @@ def get_game_data(source, week, gameid, teams, game_data):
                             'play_type'
                             ]]
         
-        # located selected play
-        play_data = game_data.iloc[play_index]
+        # located selected play as series
+        play_data = game_data[game_data['play_id']==play_index].iloc[0]
 
         # create is_pos_home col
         home_team = teams[0]
