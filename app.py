@@ -62,14 +62,14 @@ if update_button:
     quarter = st.session_state['quarter']
     game_time = f'{min:.0f}:{int(sec_remainder):02} {quarter:.0f}Q'
     
-    st.session_state['score_data'] = f'{away_team} {away_score:.0f} &#127944 {home_team} {home_score:.0f}'
+    st.session_state['score_data'] = f'{away_team} {away_score:.0f}  {home_team} {home_score:.0f}'
     st.session_state['has_the_ball'] =f'{posteam} has the ball'
     st.session_state['game_time'] = game_time
 
 if 'update_button' in st.session_state and st.session_state['update_button'] == 1:
     st.markdown(f"<h3 style='text-align: center;'>{st.session_state['score_data']}</h3>", unsafe_allow_html=True)
     st.markdown(f"<h4 style='text-align: center;'>{st.session_state['game_time']}</h4>", unsafe_allow_html=True)
-    st.markdown(f"<h4 style='text-align: center;'>{st.session_state['has_the_ball']}</h4>", unsafe_allow_html=True)
+    st.markdown(f"<h4 style='text-align: center;'>&#127944  <img src=\"{st.session_state['posteam_logo']}\" width=50></h4>", unsafe_allow_html=True)
     st.markdown(f"<h4 style='text-align: center;'>{st.session_state['down_text']}</h4>", unsafe_allow_html=True)
 
 if len(st.session_state['game_series'])>0:

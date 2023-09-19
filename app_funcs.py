@@ -31,7 +31,7 @@ def get_game_data(week, gameid, teams):
     r = requests.get(url)
     d = json.loads(r.text)
 
-    # -1 for active game
+    # -1 for last play
     down = d['items'][-1]['end']['down']
     ydstogo = d['items'][-1]['end']['distance']
     yardline = d['items'][-1]['end']['yardsToEndzone']
@@ -97,7 +97,8 @@ def get_game_data(week, gameid, teams):
                   'raw_game_data':raw_game_data,
                   'down_text':down_distance_text,
                   'quarter':quarter,
-                  'seconds':seconds}
+                  'seconds':seconds,
+                  'posteam_logo':d['logos'][-1]['href']}
         
         for s, v in states.items():
             st.session_state[s] = v
