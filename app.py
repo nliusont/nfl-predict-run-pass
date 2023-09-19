@@ -14,28 +14,48 @@ st.write('This app pulls live NFL game data and uses a machine learning model to
          the next play will be a run or a pass.')
 st.code('Is it accurate?', language=None)
 st.write('Sort of but not really. 70\% of the time, it works every time.')
-st.code('Sometimes NFL teams punt or kick field goals, can it predict those?', language=None)
+st.code('Wouldn\'t a good model actually predict the outcome of the play?', language=None)
 st.write('No. What does this look like, an AI model? Don\'t answer that.')
 
-def get_live_games():
+st.write('')
+st.markdown('<h4>The ~Model~</h4>', unsafe_allow_html=True)
+def get_games():
     url = 'http://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard'
     r = requests.get(url)
     d = json.loads(r.text)
 
     # live events
-    games = [x['shortName'] for x in d['events'] if x['status']['type']['id'].startswith('2')]
-    game_ids = [x['id'] for x in d['events'] if x['status']['type']['id'].startswith('2')]
+    # get game that are either in progress (2) or completed 3
+    games = [x['shortName'] for x in d['events'] if (x['status']['type']['id'].startswith('2')) or (x['status']['type']['id']=='3')]
+    game_ids = [x['id'] for x in d['events'] if (x['status']['type']['id'].startswith('2')) or (x['status']['type']['id']=='3')]
     home_away_tms = [(x.split('@ ')[1], x.split(' @')[0]) for x in games]
     week = d['week']['number']
 
     return games, game_ids, home_away_tms, week
 
-games, game_ids, home_away_tms, week = get_live_games()
+games, game_ids, home_away_tms, week = get_games()
 
+st.write('')
+st.write('Select a live game or one from last week and then select a play number.')
 selected_game = st.selectbox(label='Select game', options=games)
 selected_game_index = games.index(selected_game)
 selected_gameid = game_ids[selected_game_index]
 selected_tms = home_away_tms[selected_game_index]
+
+if selected_game:
+    url = f'https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/events/{selected_gameid}3/competitions/{selected_gameid}/plays?limit=300'
+    r = requests.get(url)
+    d = json.loads(r.text)
+    num_of_plays = len(d['items'])
+    st.session_state['num_plays'] = num_of_plays
+
+play_options = ['last play'] + [x+1 for x in list(range(0, num_of_plays))]
+selected_play = st.selectbox(label='Select play', options=play_options)
+if selected_play == 'last play':
+    play_index = -1
+else:
+    play_index = selected_play-1
+st.session_state['play_index'] = play_index
 
 if 'game_series' not in st.session_state:
     st.session_state['game_series'] = []
@@ -80,6 +100,25 @@ if len(st.session_state['game_series'])>0:
     if predict_button:
         pred = st.session_state['pred']
         st.markdown(f"<h1 style='text-align: center;'>{pred[0].upper()}</h1>", unsafe_allow_html=True)
+        actual_play = st.session_state["actual_play"]
+        if actual_play.startswith('Pass'):
+            outcome = 'pass'
+        elif actual_play.startswith('Rush'):
+            outcome = 'run'
+        elif actual_play.startswith('Field '):
+            outcome = 'field goal'
+        elif actual_play.startswith('Punt'):
+            outcome = 'punt'
+        else: 
+            outcome = actual_play
+
+        if outcome == 'hasn\'t happened yet!':
+            emoji = '&#10067'
+        elif pred==outcome:
+            emoji = '&#129304'
+        else:
+            emoji = '&#129335;'
+        st.markdown(f'<h5>What actually happened: {outcome} {emoji}<h5>', unsafe_allow_html=True)
 
 st.markdown('<p></p>', unsafe_allow_html=True)
 st.markdown('<p></p>', unsafe_allow_html=True)

@@ -8,10 +8,16 @@ def get_game_data(week, gameid, teams):
     r = requests.get(url)
     d = json.loads(r.text)
 
-    # get game specific data
-    raw_game_data = [x for x in d['events'] if x['id']==gameid]
-    seconds = raw_game_data[0]['status']['clock']
-    quarter = raw_game_data[0]['status']['period']
+    url = f'https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/events/{gameid}3/competitions/{gameid}/plays?limit=300'
+    r = requests.get(url)
+    d = json.loads(r.text)
+
+    play_index = st.session_state['play_index']
+
+    # get gameclock data
+    raw_game_data = d['items'][play_index]
+    seconds = d['items'][play_index]['clock']['value']
+    quarter = d['items'][play_index]['period']['number']
 
     # create padding for seconds left in half and quarter
     if quarter==5: # if game is in OT
@@ -27,14 +33,9 @@ def get_game_data(week, gameid, teams):
         if quarter > 2:
             half_seconds_remaining = game_seconds_remaining
 
-    url = f'https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/events/{gameid}3/competitions/{gameid}/plays?limit=300'
-    r = requests.get(url)
-    d = json.loads(r.text)
-
-    # -1 for last play
-    down = d['items'][-1]['end']['down']
-    ydstogo = d['items'][-1]['end']['distance']
-    yardline = d['items'][-1]['end']['yardsToEndzone']
+    down = d['items'][play_index]['end']['down']
+    ydstogo = d['items'][play_index]['end']['distance']
+    yardline = d['items'][play_index]['end']['yardsToEndzone']
     if ydstogo >= yardline:
         goal_to_go = 1.
     else:
@@ -45,13 +46,17 @@ def get_game_data(week, gameid, teams):
         return pd.Series(), '', ''
     
     else: 
-        down_distance_text = d['items'][-1]['end']['downDistanceText']
+        down_distance_text = d['items'][play_index]['end']['downDistanceText']
 
+        home_score = d['items'][play_index]['homeScore']
+        away_score = d['items'][play_index]['awayScore']
 
-        home_score = d['items'][-1]['homeScore']
-        away_score = d['items'][-1]['awayScore']
+        if play_index != -1:
+            actual_play = d['items'][play_index+1]['type']['text']
+        else:
+            actual_play = 'hasn\'t happened yet!'
 
-        url = d['items'][-1]['team']['$ref']
+        url = d['items'][play_index]['team']['$ref']
         r = requests.get(url)
         d = json.loads(r.text)
 
@@ -65,7 +70,6 @@ def get_game_data(week, gameid, teams):
             pos_score = away_score
             def_score = home_score
             is_pos_home = 0
-        
 
         index = ['week',
                 'yardline_100',
@@ -98,7 +102,8 @@ def get_game_data(week, gameid, teams):
                   'down_text':down_distance_text,
                   'quarter':quarter,
                   'seconds':seconds,
-                  'posteam_logo':d['logos'][-1]['href']}
+                  'posteam_logo':d['logos'][-1]['href'],
+                  'actual_play':actual_play}
         
         for s, v in states.items():
             st.session_state[s] = v
