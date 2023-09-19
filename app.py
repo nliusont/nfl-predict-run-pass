@@ -1,6 +1,5 @@
 import requests
 import json
-import pickle
 import pandas as pd
 import streamlit as st
 from app_funcs import get_game_data
