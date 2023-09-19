@@ -5,6 +5,7 @@ import pandas as pd
 import streamlit as st
 from app_funcs import get_game_data
 from app_funcs import predict_play
+from sklearn.ensemble import RandomForestClassifier
 
 def get_live_games():
     url = 'http://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard'
