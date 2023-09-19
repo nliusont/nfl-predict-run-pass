@@ -7,6 +7,11 @@ from app_funcs import get_game_data
 from app_funcs import predict_play
 from sklearn.ensemble import RandomForestClassifier
 
+import os
+
+result = os.popen('pip list').read()
+st.code(result, language=None)
+
 def get_live_games():
     url = 'http://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard'
     r = requests.get(url)
