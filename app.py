@@ -8,8 +8,7 @@ from app_funcs import predict_play
 from sklearn.ensemble import RandomForestClassifier
 
 import os
-
-result = os.popen('pip list').read()
+result = os.popen('pip sklearn --version').read()
 st.code(result, language=None)
 
 def get_live_games():
