@@ -8,11 +8,14 @@ from app_funcs import predict_play
 
 st.set_page_config(page_title="Predicting the next NFL play")
 st.title("Predicting the next NFL play")
-st.write('Will the next play be a run or pass? A question as old as time itself. \
-         And now, we have an AI to predict it. We have finally answered humanity\'s biggest question.')
+st.write('Will the next play be a run or  pass? A question as old as time itself. \
+         And now, there is an AI to predict it. We have finally answered humanity\'s biggest question.')
 st.write('This app pulls live NFL game data and uses a machine learning model to predict whether \
-         the next play will be a run or pass.')
-st.write('Is it accurate? sort of but not really. 70\% of the time, it works every time.')
+         the next play will be a run or a pass.')
+st.code('Is it accurate?', language=None)
+st.write('Sort of but not really. 70\% of the time, it works every time.')
+st.code('Sometimes NFL teams punt or kick field goals, can it predict those?', language=None)
+st.write('No. What does this look like, an AI model? Don\'t answer that.')
 
 def get_live_games():
     url = 'http://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard'
