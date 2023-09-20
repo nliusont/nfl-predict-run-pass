@@ -287,7 +287,7 @@ def generate_play_text(selected_tms):
     quarter = st.session_state['quarter']
     game_time = f'{min:.0f}:{int(sec_remainder):02} {quarter:.0f}Q'
     
-    st.session_state['score_data'] = f'{away_team} {away_score:.0f}  {home_team} {home_score:.0f}'
+    st.session_state['score_data'] = f'{away_team} {away_score:.0f} - {home_team} {home_score:.0f}'
     st.session_state['has_the_ball'] = f'{posteam} has the ball'
     st.session_state['game_time'] = game_time
     
