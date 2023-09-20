@@ -45,12 +45,12 @@ if len(games) > 0:
     selected_game_index = games.index(selected_game) 
     selected_tms = home_away_tms[selected_game_index] 
     selected_gameid = game_ids[selected_game_index] 
+    game_data = game_data[game_data['game_id']==selected_gameid].copy()
 
     # select the game and, if not live, the play #
     if selected_game:
         if source != 'Live':
-            play_df = game_data[game_data['game_id']==selected_gameid].copy()
-            play_df = play_df[['qtr', 'posteam', 'down', 'ydstogo', 'play_id']].dropna()
+            play_df = game_data[['qtr', 'posteam', 'down', 'ydstogo', 'play_id']].dropna()
             # create list of plays
             play_df['play_text'] = play_df["qtr"].astype(int).astype(str)  \
                                     + 'Q ' \
@@ -62,12 +62,12 @@ if len(games) > 0:
                                     
             play_index = st.selectbox(label='Select play', 
                                          options=play_df['play_id'], 
-                                         format_func=lambda x: play_df.loc[play_df['play_id']==x, 'play_text'].values[0])
-
+                                         format_func=lambda x: play_df.loc[play_df['play_id']==x, 'play_text'].values[0],
+                                         key='play_index')
         else:
             # if the game is live, always go to the latest play
             play_index = -1 
-        st.session_state['play_index'] = play_index
+            st.session_state['play_index'] = play_index
 
     # initalize game series in session state
     if 'game_series' not in st.session_state:
@@ -94,7 +94,7 @@ if len(games) > 0:
         # get prediction
         if predict_button:
             pred = st.session_state['pred']
-            st.markdown(f"<h1 style='text-align: center;'>{pred[0].upper()}</h1>", unsafe_allow_html=True)
+            st.markdown(f"<h1 style='text-align: center;'>PREDICTION: {pred[0].upper()}</h1>", unsafe_allow_html=True)
             actual_play = st.session_state["actual_play"]
 
             # API uses different play_type language
