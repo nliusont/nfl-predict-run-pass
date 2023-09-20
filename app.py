@@ -1,5 +1,3 @@
-import requests
-import json
 import pandas as pd
 import streamlit as st
 from app_funcs import get_game_data
@@ -8,7 +6,6 @@ from app_funcs import get_games
 from app_funcs import generate_play_text
 from app_funcs import get_ordinal
 from datetime import date
-import nfl_data_py as nfl
 st.set_page_config(page_title="Predicting the next NFL play")
 
 ### OPENING
