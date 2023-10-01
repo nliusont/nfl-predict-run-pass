@@ -40,9 +40,10 @@ if len(games) > 0:
 
     # get home_away tuple and gameid (for API)
     selected_game_index = games.index(selected_game) 
-    selected_tms = home_away_tms[selected_game_index] 
-    selected_gameid = game_ids[selected_game_index] 
-    game_data = game_data[game_data['game_id']==selected_gameid].copy()
+    selected_tms = home_away_tms[selected_game_index]
+    selected_gameid = game_ids[selected_game_index]
+    if source!='Live':
+        game_data = game_data[game_data['game_id']==selected_gameid].copy()
 
     # select the game and, if not live, the play #
     if selected_game:
@@ -114,7 +115,8 @@ if len(games) > 0:
             else:
                 emoji = '&#129335;'
             st.markdown('<p></p>', unsafe_allow_html=True)
-            st.markdown(f'<h5>What actually happened: {outcome} {emoji}<h5>', unsafe_allow_html=True)
+            if source != 'Live':
+                st.markdown(f'<h5>What actually happened: {outcome} {emoji}<h5>', unsafe_allow_html=True)
 else:
     st.write('No live games! Try selecting a previous week')
 
